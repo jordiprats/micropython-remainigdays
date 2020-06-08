@@ -2,6 +2,7 @@
 import tm1637
 from machine import Pin
 tm = tm1637.TM1637(clk=Pin(5), dio=Pin(4))
+tm.brightness(1)
 tm.write([0, 0, 0, 0])
 tm.write([127, 255, 127, 127])
 
