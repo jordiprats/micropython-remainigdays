@@ -14,15 +14,14 @@ sta_if = network.WLAN(network.STA_IF)
 sta_if.active(True)
 sta_if.scan()
 sta_if.connect("_SSID_", "_PASSWORD_")
-   
+
 import utime
 print('sleep 10')
 utime.sleep(10)
 
 print('ok')
 
-goal_day, goal_month, goal_hour, goal_minute = (17, 7, 22, 0)
-    
+goal_day, goal_month, goal_hour, goal_minute = (8, 9, 22, 0)
     
     
 if sta_if.isconnected():
@@ -41,6 +40,9 @@ if sta_if.isconnected():
             ts_diff = ts_goal-ntptime.time()
 
             days_left = ts_diff/60/60/24
+
+            if days_left > 9999:
+                raise Exception('days left too big')
 
             tm.number(int(days_left))
 
