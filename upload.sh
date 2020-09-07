@@ -2,9 +2,12 @@
 
 pkill screen
 
-for file in main.py config.py ../micropython-utelegram/utelegram.py;
+for file in main.py config.py utelegram.py tm1637.py;
 do
     echo "refreshing $file"
-    ampy --port /dev/ttyUSB0 rm $file
+    if [ -z "$1" ];
+    then
+        ampy --port /dev/ttyUSB0 rm $file
+    fi
     ampy --port /dev/ttyUSB0 put $file
 done
