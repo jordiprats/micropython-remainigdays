@@ -1,0 +1,4 @@
+wifi_config = {
+    'ssid':'DEMO',
+    'password':'PASSW0RD'
+}

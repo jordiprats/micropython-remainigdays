@@ -1,3 +1,4 @@
+from config import wifi_config
 
 import tm1637
 from machine import Pin
@@ -13,7 +14,7 @@ import network
 sta_if = network.WLAN(network.STA_IF)
 sta_if.active(True)
 sta_if.scan()
-sta_if.connect("_SSID_", "_PASSWORD_")
+sta_if.connect(wifi_config['ssid'], wifi_config['password'])
 
 import utime
 print('sleep 10')
