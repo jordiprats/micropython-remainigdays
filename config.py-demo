@@ -5,4 +5,5 @@ wifi_config = {
 
 utelegram_config = {
     'token': 'TOKEN',
+    'masters': [ 'ADMIN_ID' ]
 }
