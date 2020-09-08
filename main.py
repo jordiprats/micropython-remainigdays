@@ -1,5 +1,7 @@
 import gc
 
+debug = True
+
 from config import wifi_config
 from config import utelegram_config
 
@@ -10,7 +12,7 @@ tm.brightness(1)
 tm.write([0, 0, 0, 0])
 tm.write([127, 255, 127, 127])
 
-print('leds init')
+print('leds init') if debug
 
 import network
 
@@ -20,10 +22,10 @@ sta_if.scan()
 sta_if.connect(wifi_config['ssid'], wifi_config['password'])
 
 import utime
-print('sleep 10')
+print('sleep 10') if debug
 utime.sleep(10)
 
-print('ok')
+print('ok') if debug
 
 goal_day, goal_month, goal_year, goal_hour, goal_minute = (8, 9, 2020, 22, 0)
 
@@ -32,18 +34,18 @@ updated = False
 def set_countdown_date(message):
     global updated, utelegram_config
 
-    print(message)
+    print(message) if debug
 
     if str(message['message']['from']['id']) in utelegram_config['masters']:
-        print('== SET ==')
+        print('== SET ==') if debug
         try:
             message_parts = message['message']['text'].split(' ')
 
-            print(str(message_parts))
+            print(str(message_parts)) if debug
 
             if message_parts[1]:
                 message_date = message_parts[1].split('/')
-                print(str(message_date))
+                print(str(message_date)) if debug
 
                 if message_date[0] and message_date[1] and message_date[2]:
                     goal_day = message_date[0]
@@ -53,14 +55,14 @@ def set_countdown_date(message):
 
                     bot.send(message['message']['chat']['id'], 'date set to '+str(goal_day)+'/'+str(goal_month)+'/'+str(goal_year))
 
-                    print('date set to '+str(goal_day)+'/'+str(goal_month)+'/'+str(goal_year))
+                    print('date set to '+str(goal_day)+'/'+str(goal_month)+'/'+str(goal_year)) if debug
         except:
-            print('invalid command: '+str(message))
+            print('invalid command: '+str(message)) if debug
 
 
 try:
     if sta_if.isconnected():
-        print('connected')
+        print('connected') if debug
 
         import utelegram
 
@@ -75,20 +77,20 @@ try:
             try:
 
                 for i in range(60):
-                    print('read telegram')
+                    print('read telegram') if debug
                     bot.read_once()
                     if updated:
-                        print('date updated')
+                        print('date updated') if debug
                         updated = False
                         break
-                    print('sleeping')
+                    print('sleeping') if debug
                     utime.sleep(5)
                     gc.collect()
 
                 import ntptime
                 import utime
 
-                print('GOAL: '+str(goal_day)+'/'+str(goal_month)+'/'+str(goal_year))
+                print('GOAL: '+str(goal_day)+'/'+str(goal_month)+'/'+str(goal_year)) if debug
 
                 year, month, day, hour, minute, second, weekday, yearday = utime.localtime(ntptime.time())
 
@@ -106,13 +108,13 @@ try:
 
                 tm.number(int(days_left))
 
-                print('updated days remaining')
+                print('updated days remaining') if debug
             except Exception as e:
-                print('runtime exception')
-                print(str(e))
+                print('runtime exception') if debug
+                print(str(e)) if debug
                 utime.sleep(5)
 except Exception as e:
-    print('unhandled exception')
-    print(str(e))
+    print('unhandled exception') if debug
+    print(str(e)) if debug
 
-print('aborting')
+print('aborting') if debug
