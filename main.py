@@ -1,6 +1,6 @@
 import gc
 
-debug = True
+debug = False
 
 from config import wifi_config
 from config import utelegram_config
@@ -23,16 +23,17 @@ sta_if.connect(wifi_config['ssid'], wifi_config['password'])
 
 import utime
 if debug: print('sleep 10')
-utime.sleep(10)
+utime.sleep(20)
 
 if debug: print('ok')
 
 goal_day, goal_month, goal_year, goal_hour, goal_minute = (8, 9, 2020, 22, 0)
 
 updated = False
+display_value = False
 
 def set_countdown_date(message):
-    global updated, utelegram_config
+    global updated, utelegram_config, goal_day, goal_month, goal_year, display_value
 
     if debug: print(message)
 
@@ -48,16 +49,18 @@ def set_countdown_date(message):
                 if debug: print(str(message_date))
 
                 if message_date[0] and message_date[1] and message_date[2]:
-                    goal_day = message_date[0]
-                    goal_month = message_date[1]
-                    goal_year = message_date[2]
+                    goal_day = int(message_date[0])
+                    goal_month = int(message_date[1])
+                    goal_year = int(message_date[2])
                     updated = True
 
                     bot.send(message['message']['chat']['id'], 'date set to '+str(goal_day)+'/'+str(goal_month)+'/'+str(goal_year))
 
                     if debug: print('date set to '+str(goal_day)+'/'+str(goal_month)+'/'+str(goal_year))
-        except:
-            if debug: print('invalid command: '+str(message))
+
+                    display_value = True
+        except Exception as e:
+            if debug: print('invalid command: '+str(message)+' exception: '+str(e))
 
 
 try:
@@ -106,7 +109,10 @@ try:
                 if days_left > 9999:
                     raise Exception('days left too big')
 
-                tm.number(int(days_left))
+                if debug: print('days_left: '+str(days_left))
+
+                if display_value:
+                    tm.number(int(days_left))
 
                 if debug: print('updated days remaining')
             except Exception as e:
